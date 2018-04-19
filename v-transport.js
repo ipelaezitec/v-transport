@@ -1,5 +1,64 @@
+function inicializarMatriz(listaReferencia){
+    let matriz= [];
+    for (let indice = 0; indice < listaReferencia.length; indice++) { 
+        let listaVacia=[];
+        for (let subindice = 0; subindice < listaReferencia[indice].length; subindice++) {
+            
+            listaVacia.push(0);
+        }
+        matriz.push(listaVacia)
+    }
+    return matriz
+}
 
+function inicializarMarca(listaReferencia) {
+    let lista= [];
+    for (let i = 0; i < listaReferencia.length; i++) {
+        lista.push(0)        
+    }
+    return lista
+}
 
+function imprimirTiposMasTotal(listaTipos,contadorTipos){
+    
+    console.log("Manifiesto de los vehículos a transportar");
+    console.log("------------------------------------");
+
+    let tipos = ["Auto","Utilitario","Sub","Pick-up"]
+    let contadorTotal = 0;
+    for (let i = 0; i < tipos.length; i++) {
+        let contador=0;
+        for (let e = 0; e < contadorTipos.length; e++) {
+            const element = contadorTipos[e];
+            if (tipos[i]==element) {
+                contador++;
+                contadorTotal++;
+            }
+        }
+        console.log(tipos[i]+" : "+contador);
+    }
+
+    console.log("------------");
+    console.log("Total : "+contadorTotal+"\n");
+
+}
+
+function imprimirModelosMasMarcas(listaContadorModelos,listaContadorMarca,listaMarcas,listaModelos){
+
+    for (let i = 0; i < listaContadorModelos.length; i++) { // IMPRIMIR
+        if(listaContadorMarca[i]>0){
+            console.log(listaMarcas[i]+" : "+listaContadorMarca[i]);
+            for (let indice = 0; indice < listaContadorModelos[i].length; indice++) {
+               
+                if (listaContadorModelos[i][indice]>0) {
+                    console.log("   "+listaModelos[i][indice]+" : "+listaContadorModelos[i][indice]);
+                    
+                }
+            }
+        }
+    }
+
+}
 
 function generarInforme(arregloPrincipal){ //generarInforme? changename
     let listaModelos=[
@@ -10,9 +69,8 @@ function generarInforme(arregloPrincipal){ //generarInforme? changename
                     ["Ka","Gol","Vento","Passat","Bora","Amarok"]
                     ];
 
-    let listaMarcas=["Fiat","Renault","Chevrolet","Ford","VW"] 
     // a listasMarcas solamente lo vincula con listaModelos la cantidad de arrays tal tiene dentro (5 en este caso).
-
+    let listaMarcas=["Fiat","Renault","Chevrolet","Ford","VW"] 
 
     let listaTipos=[
                     ["Auto","Auto","Auto","Utilitario","Auto","Pick-up"],
@@ -22,24 +80,13 @@ function generarInforme(arregloPrincipal){ //generarInforme? changename
                     ["Auto","Auto","Auto","Auto","Auto","Pick-up"]
                     ];
 
-                    
-    let listaContador= [];
-    for (let indice = 0; indice < listaModelos.length; indice++) { // hacer que sea función, no va a importar los tamaños.
-        // que sea "lista" y retorne "matriz"
-        let listaVacia=[];
-        for (let subindice = 0; subindice < listaModelos[indice].length; subindice++) {
-            
-            listaVacia.push(0);
-        }
-        listaContador.push(listaVacia)
-    }
 
-    // aca tiene que quedar un let listaContadorModelos = inicializarMatriz(listaModelos);
-    // aca tiene que quedar un "listaContadorTipos"   let listaContadorTipos = listaContadorModelos.slice();
+    let listaContadorModelos = inicializarMatriz(listaModelos);
+    let listaContadorMarca=inicializarMarca(listaMarcas);
+    
 
-    let listaContadorMarca=[0,0,0,0,0]; // hacer que se genere a partir de la lista de marcas
-
-    for (let indiceTupla = 0; indiceTupla < listaModelos.length; indiceTupla++) { 
+    let contadorTipos=[]; 
+    for (let indiceTupla = 0; indiceTupla < listaModelos.length; indiceTupla++) {
         // recorro las 5 "tuplas"
         for (let indiceMain = 0; indiceMain < arregloPrincipal.length; indiceMain++) { 
             //recorro la lista principal obtenida  
@@ -48,39 +95,29 @@ function generarInforme(arregloPrincipal){ //generarInforme? changename
                 // comparo la lista principal obtenida con la lista de modelos
                 if (elementToFind == listaModelos[indiceTupla][indice]){
                     
-                    listaContador[indiceTupla][indice]++;
-                    listaContadorMarca[indiceTupla]++; 
+                    listaContadorModelos[indiceTupla][indice]++;
+                    listaContadorMarca[indiceTupla]++;
+                    contadorTipos.push(listaTipos[indiceTupla][indice]);
+
                     break;
                 }
             }
         }        
     }
-    console.log(listaContador);
-    console.log(listaContadorMarca);
+
     
+    imprimirTiposMasTotal(listaTipos,contadorTipos); 
+    imprimirModelosMasMarcas(listaContadorModelos,listaContadorMarca,listaMarcas,listaModelos)
+
     
-    
-    for (let i = 0; i < listaContador.length; i++) { // IMPRIMIR
-        if(listaContadorMarca[i]>0){
-            console.log(listaMarcas[i]+" : "+listaContadorMarca[i]);
-            for (let indice = 0; indice < listaContador[i].length; indice++) {
-               
-                if (listaContador[i][indice]>0) {
-                    console.log("   "+listaModelos[i][indice]+" : "+listaContador[i][indice]);
-                }
-            }
-        }
-    }
-    
-    
+
 }
     
-// probablemente hacer comparación en minuscula o capitalizar
-//cambiar a validadorInicial?
-function controladorInicial(arregloPrincipal){
+function validadorInicial(arregloPrincipal){
     if (Array.isArray(arregloPrincipal)){
         generarInforme(arregloPrincipal)
         // controlar que los elementos sean todos string
+        // probablemente hacer comparación en minuscula o capitalizar
     }
     else{
         console.log("Error : El objeto recibido no es un array")
@@ -88,37 +125,9 @@ function controladorInicial(arregloPrincipal){
 }
 
 function imprimirDetalles(arregloPrincipal){
-    controladorInicial(arregloPrincipal)
+    validadorInicial(arregloPrincipal)
 }
 
 let arregloPrincipal = ["Cruze", "Palio", "Kangoo", "Ranger", "Kangoo", "Uno", "Ranger", "Palio", "Uno", "Megane", "Koleos", "Fiesta", "Toro"]; 
 
 imprimirDetalles(arregloPrincipal)
-
-/* 
-        consideraciones : NO OBJETOS
-
-
-
-            tipo de vehiculo
-
-            Autos : 8
-            Camionetas: 3
-            Subs: 1
-            Utilitarios: 2
-            ------------------
-            total: 13 vehiculos
-
-            Fiat: 5
-              Palio: 2
-              Uno: 2
-              Toro: 1
-           Renault: 4
-              Megane: 1
-              Koleos: 1
-              Kangoo: 2
-          Chevrolet: 1
-              Cruze: 1
-          Ford: 3
-              Fiesta: 1
-              Ranger: 2 */
